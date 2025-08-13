@@ -2,11 +2,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Content-Security-Policy = "default-src 'self'; frame-ancestors https://SENIN-EMBED-EDEN-SITE.com;"
-    # Eski header'ı kapat (varsa)
-    X-Frame-Options = ""
-    # (Opsiyonel) Kamera/mikrofon
-    Permissions-Policy = "camera=(self), microphone=(self), autoplay=(*), fullscreen=(self)"
