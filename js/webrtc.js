@@ -7,6 +7,156 @@
 // Her video için ayrı bir izleyici tutalım ki peer kapanınca durdurabilelim
 const speakingMonitors = new Map();
 
+var roomId = "";
+var currentId = "";
+
+let __kicking = false;
+
+async function kickUser() {
+    if (__kicking) return { ok: true, already: true };
+
+    if (!roomId || !currentId) {
+        console.warn("⚠️ roomId veya currentId tanımsız!");
+        return { ok: false, error: "missing-params" };
+    }
+
+    __kicking = true;
+    try {
+        // 1) Sunucuya kick isteği
+        const res = await fetch(`https://facetime-bpbxasa7fwg2hsbb.swedencentral-01.azurewebsites.net//api/room/${encodeURIComponent(roomId)}/kick/${encodeURIComponent(currentId)}`, {
+            method: "POST"
+        });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.warn(`❌ Kick başarısız [${res.status}]:`, errorText);
+            return { ok: false, status: res.status, error: errorText || res.statusText };
+        }
+
+        console.log(`✅ Kick ok: ${currentId}. Lokal temizlik başlatılıyor…`);
+
+        // 2) Peer bağlantılarını kapat (sadece bu client)
+        try {
+            if (window.webrtc?.peers) {
+                Object.keys(window.webrtc.peers).forEach(pid => window.webrtc.closePeer(pid));
+                window.webrtc.peers = {};
+            }
+        } catch (e) { console.warn("Peer cleanup error:", e); }
+
+        // 3) Konuşma izleyicilerini durdur
+        try {
+            if (typeof speakingMonitors !== "undefined") {
+                for (const id of Array.from(speakingMonitors.keys())) stopMonitoring(id);
+            }
+        } catch (e) { console.warn("Monitor cleanup error:", e); }
+
+        // 4) Local stream’i kapat
+        try {
+            if (window.webrtc?.localStream) {
+                window.webrtc.localStream.getTracks().forEach(t => { try { t.stop(); } catch { } });
+                window.webrtc.localStream = null;
+            }
+        } catch (e) { console.warn("Local stream stop error:", e); }
+
+        // 5) Local video elementini temizle
+        try {
+            const lv = document.getElementById("local");
+            if (lv) {
+                try { lv.srcObject = null; } catch { }
+                lv.removeAttribute("src");
+                try { lv.load(); } catch { }
+                lv.classList.remove("speaking");
+            }
+        } catch (e) { console.warn("Local video cleanup error:", e); }
+
+        // 6) Remote videoları sessize al/sıfırla (Blazor elemanlarını DOM’dan kaldırmayız)
+        try {
+            document.querySelectorAll('video[id^="remote-"]').forEach(v => {
+                try { v.srcObject = null; } catch { }
+                v.removeAttribute("src");
+                try { v.load(); } catch { }
+                v.classList.remove("speaking");
+            });
+        } catch (e) { console.warn("Remote video cleanup error:", e); }
+
+        // 7) Blazor’a haber ver (UI’ı temizle/navigate et vs.)
+        try {
+            window.webrtc?.dotnetRef?.invokeMethodAsync("OnKicked", "KickedBySelf");
+        } catch (e) {
+            console.warn("OnKicked notify failed:", e);
+        }
+
+        return { ok: true };
+    } catch (err) {
+        console.error("🚨 Kick isteğinde hata:", err);
+        return { ok: false, error: err.message };
+    } finally {
+        __kicking = false;
+    }
+}
+let __removingRoom = false;
+
+async function removeRoom() {
+    if (__removingRoom) return { ok: true, already: true };
+
+    // roomId'yi bildiğimiz yerlerden çöz
+    const id =
+        (typeof roomId !== "undefined" && roomId) ||
+        (window.webrtc && window.webrtc.currentRoomId) ||
+        (window.location.pathname.split("/")[2] || "");
+
+    if (!id) {
+        console.warn("⚠️ roomId bulunamadı.");
+        return { ok: false, error: "missing-roomId" };
+    }
+
+    __removingRoom = true;
+    try {
+        const res = await fetch(`https://facetime-bpbxasa7fwg2hsbb.swedencentral-01.azurewebsites.net/api/room/${encodeURIComponent(id)}`, { method: "DELETE" });
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            console.warn(`❌ RemoveRoom başarısız [${res.status}]:`, errorText);
+            return { ok: false, status: res.status, error: errorText || res.statusText };
+        }
+
+        console.log(`✅ Oda kapatıldı: ${id}`);
+
+        // Lokal temizlik (hemen UI toparlansın)
+        try {
+            if (window.webrtc?.onForceLeave) {
+                await window.webrtc.onForceLeave("RoomClosed");
+            } else {
+                // Minimal fallback
+                if (window.webrtc?.peers) {
+                    Object.keys(window.webrtc.peers).forEach(pid => window.webrtc.closePeer(pid));
+                    window.webrtc.peers = {};
+                }
+                if (window.webrtc?.localStream) {
+                    window.webrtc.localStream.getTracks().forEach(t => { try { t.stop(); } catch { } });
+                    window.webrtc.localStream = null;
+                }
+                const lv = document.getElementById("local");
+                if (lv) { try { lv.srcObject = null; } catch { } lv.removeAttribute("src"); try { lv.load(); } catch { } }
+                document.querySelectorAll('video[id^="remote-"]').forEach(v => {
+                    try { v.srcObject = null; } catch { }
+                    v.removeAttribute("src");
+                    try { v.load(); } catch { }
+                });
+            }
+        } catch (e) {
+            console.warn("Lokal temizlik hatası:", e);
+        }
+
+        return { ok: true };
+    } catch (err) {
+        console.error("🚨 RemoveRoom isteğinde hata:", err);
+        return { ok: false, error: err.message };
+    } finally {
+        __removingRoom = false;
+    }
+}
+
 function monitorSpeaking(videoElementId) {
     if (speakingMonitors.has(videoElementId)) return;
 
@@ -186,7 +336,6 @@ window.webrtc = {
                 }
             }
 
-            // Blazor'a haber ver
             this.dotnetRef?.invokeMethodAsync('OnRemoteTrack', peerId);
         };
 

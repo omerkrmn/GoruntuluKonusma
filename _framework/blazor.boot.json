@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "GozeGoz",
   "resources": {
-    "hash": "sha256-96aXVMOxroZJliLPhhrYs+lOgdb7sF9ZAkuvomMvskE=",
+    "hash": "sha256-MRkd0vCdBXrJGkrZZL7ASBuNy9N2huEx4xp7phIyhW4=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.v4q71u6g32.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.1ozg4141rw.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -52,13 +52,13 @@
       "System.Private.Uri.0t3y6g33ys.wasm": "System.Private.Uri.wasm",
       "System.Runtime.InteropServices.JavaScript.29gxsnhsf2.wasm": "System.Runtime.InteropServices.JavaScript.wasm",
       "System.Runtime.Serialization.Formatters.kyxbi5bh63.wasm": "System.Runtime.Serialization.Formatters.wasm",
-      "System.Runtime.njqoclh8r9.wasm": "System.Runtime.wasm",
+      "System.Runtime.ph12k3cjez.wasm": "System.Runtime.wasm",
       "System.Security.Claims.9uio1ynn25.wasm": "System.Security.Claims.wasm",
       "System.Security.Cryptography.7d9eh2eg9j.wasm": "System.Security.Cryptography.wasm",
       "System.Text.RegularExpressions.uppli1il33.wasm": "System.Text.RegularExpressions.wasm",
       "netstandard.12yjmgjdtj.wasm": "netstandard.wasm",
       "System.Private.CoreLib.3ui3g0nm6e.wasm": "System.Private.CoreLib.wasm",
-      "GozeGoz.5yfc7avbbn.wasm": "GozeGoz.wasm",
+      "GozeGoz.ypso5vbesu.wasm": "GozeGoz.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.st0ovrfdhi.js": "dotnet.native.js",
       "dotnet.native.67rumul467.wasm": "dotnet.native.wasm",
@@ -134,12 +134,12 @@
       "System.Net.WebSockets.3bpcbqg4z1.wasm": "sha256-4WFXlb0L8QGE/xVHtjwOHvoUymdqZ82N/ACAgckHuFM=",
       "System.Private.Uri.0t3y6g33ys.wasm": "sha256-PMKpFKfWlvvMT1aqGRJWD2NUy5vBL6z9m+X8bfIgRuY=",
       "System.Runtime.Serialization.Formatters.kyxbi5bh63.wasm": "sha256-VAmL+2fHQWz0YRuYtBKCvAQcGa7CUGwa2zvvO7ub9G8=",
-      "System.Runtime.njqoclh8r9.wasm": "sha256-Y6xV2Yj1aUw08vdQu5dqa3ciK0apq+0Th4oF+ZSutrs=",
+      "System.Runtime.ph12k3cjez.wasm": "sha256-DXTfjeJcpWosJrl6JZS/XHdbRvaTbOtBodzeNr/Tt0g=",
       "System.Security.Claims.9uio1ynn25.wasm": "sha256-n/ES3oVEcarRfY6WLSpx7rLxvOAx1v6suS+JZRoeS34=",
       "System.Security.Cryptography.7d9eh2eg9j.wasm": "sha256-6/+OM7wumhIcoTpwiR/TjFIMxOw8Ou6Ji+vwJaEMRhE=",
       "System.Text.RegularExpressions.uppli1il33.wasm": "sha256-cssgrj2fLKJui+a09EbhoMvUEqUJHPWKR47Ri3l887A=",
       "netstandard.12yjmgjdtj.wasm": "sha256-10YT3CUaLtqv1AnI7LTUWeiB45oVDgSQY36/79N/mJw=",
-      "GozeGoz.5yfc7avbbn.wasm": "sha256-Q6WS5s8DuJ24YGmfLB27vE8/WdsMrTGaimy7/Sq1Er0="
+      "GozeGoz.ypso5vbesu.wasm": "sha256-mifTaEcGMfPalmZkw8OoytKffEFsLDZNMir7iiVIWyA="
     }
   },
   "cacheBootResources": true,
