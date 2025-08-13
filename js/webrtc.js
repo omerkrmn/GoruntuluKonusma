@@ -6,6 +6,7 @@
 
 // Her video için ayrı bir izleyici tutalım ki peer kapanınca durdurabilelim
 const speakingMonitors = new Map();
+
 function monitorSpeaking(videoElementId) {
     if (speakingMonitors.has(videoElementId)) return;
 
@@ -99,15 +100,36 @@ window.webrtc = {
     dotnetRef: null,     // .NET callback ref
 
     registerDotNetRef(ref) { this.dotnetRef = ref; },
-
     async getMedia(constraints) {
         if (!this.localStream) {
-            this.localStream = await navigator.mediaDevices.getUserMedia(
-                constraints || { video: true, audio: true }
-            );
+            try {
+                this.localStream = await navigator.mediaDevices.getUserMedia(
+                    constraints || { video: true, audio: true }
+                );
+                return { ok: true, id: this.localStream.id };
+            } catch (err) {
+                console.warn("getUserMedia failed:", err);
+
+                if (err.name === "NotReadableError" || err.name === "TrackStartError") {
+                    alert("Kameranız başka bir uygulama tarafından kullanılıyor. Görüntü verilemeyecek, ancak sisteme giriş yapabilirsiniz.");
+
+                    // Sadece mikrofonu almayı deneyelim
+                    try {
+                        this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                        return { ok: true, id: this.localStream.id, warning: "video-unavailable" };
+                    } catch (micErr) {
+                        console.warn("Audio only getUserMedia failed:", micErr);
+                        return { ok: false, error: micErr.message };
+                    }
+                }
+
+                // Diğer hatalar
+                return { ok: false, error: err.message };
+            }
         }
         return { ok: true, id: this.localStream.id };
     },
+
 
     attachLocalVideo(elementId) {
         const el = document.getElementById(elementId);
