@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "GozeGoz",
   "resources": {
-    "hash": "sha256-MRkd0vCdBXrJGkrZZL7ASBuNy9N2huEx4xp7phIyhW4=",
+    "hash": "sha256-NQZIwVzYN3iXTNS3OL8yLzbKIu6+R/tncjcMMCCSG98=",
     "fingerprinting": {
       "Microsoft.AspNetCore.Components.v4q71u6g32.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.1ozg4141rw.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -58,7 +58,7 @@
       "System.Text.RegularExpressions.uppli1il33.wasm": "System.Text.RegularExpressions.wasm",
       "netstandard.12yjmgjdtj.wasm": "netstandard.wasm",
       "System.Private.CoreLib.3ui3g0nm6e.wasm": "System.Private.CoreLib.wasm",
-      "GozeGoz.ypso5vbesu.wasm": "GozeGoz.wasm",
+      "GozeGoz.s5dw1z7jup.wasm": "GozeGoz.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.st0ovrfdhi.js": "dotnet.native.js",
       "dotnet.native.67rumul467.wasm": "dotnet.native.wasm",
@@ -139,7 +139,7 @@
       "System.Security.Cryptography.7d9eh2eg9j.wasm": "sha256-6/+OM7wumhIcoTpwiR/TjFIMxOw8Ou6Ji+vwJaEMRhE=",
       "System.Text.RegularExpressions.uppli1il33.wasm": "sha256-cssgrj2fLKJui+a09EbhoMvUEqUJHPWKR47Ri3l887A=",
       "netstandard.12yjmgjdtj.wasm": "sha256-10YT3CUaLtqv1AnI7LTUWeiB45oVDgSQY36/79N/mJw=",
-      "GozeGoz.ypso5vbesu.wasm": "sha256-mifTaEcGMfPalmZkw8OoytKffEFsLDZNMir7iiVIWyA="
+      "GozeGoz.s5dw1z7jup.wasm": "sha256-YLjQ+sdzoOW/Rlx9M80PqVYOJvcHDdiWXIqmIvFN97U="
     }
   },
   "cacheBootResources": true,
